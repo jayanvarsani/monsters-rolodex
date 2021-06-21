@@ -1,31 +1,37 @@
+// import React and React.Component
 import React, { Component } from "react";
 import "./App.css";
+// destructure import
 import { CardList } from "./components/card-list/card-list.component";
 import { SearchBox } from "./components/search-box/search-box.component";
 
+// App inherits Component
 class App extends Component {
 	constructor() {
 		super();
+		// intiialise empty state
 		this.state = {
 			monsters: [],
 			searchField: "",
 		};
-
-		this.handleChange = this.handleChange.bind(this);
 	}
 
+	// called when site loaded on screen
 	componentDidMount() {
 		fetch("https://jsonplaceholder.typicode.com/users")
 			.then((response) => response.json())
+			// set state will re-render components
 			.then((users) => this.setState({ monsters: users }));
 	}
 
-	handleChange(e) {
-		this.setState({ searchField: e.target.value });
-	}
+	// upon key press, setState, thus re-rendering components
+	handleChange = (e) => this.setState({ searchField: e.target.value });
 
+	// called whenever re-rendering is needed to be done
 	render() {
+		// pull out via destructuring
 		const { monsters, searchField } = this.state;
+		// filter out monsters on every render based on current search
 		const filteredMonsters = monsters.filter((monster) =>
 			monster.name.toLowerCase().includes(searchField.toLowerCase())
 		);
@@ -36,6 +42,7 @@ class App extends Component {
 					placeholder="Find Monsters..."
 					handleChange={this.handleChange}
 				/>
+				{/* card list component made of card components of the filtered list */}
 				<CardList monsters={filteredMonsters} />
 			</div>
 		);
